@@ -15,7 +15,6 @@
 #include <net/if_arp.h>
 
 #include "psniff.h"
-#include "banner.h"
 
 /*Define packet types*/
 int packet_num; //accumilator of packet count
@@ -163,7 +162,7 @@ int main(int argc, char const *argv[])
 	bpf_u_int32 pcap_device_mask;
 	bpf_u_int32 pcap_device_ip;
 	struct bpf_program filter;
-	const char* version = "1.0";
+	const char* version = "1.2";
 	unsigned int ts = 0;	
 	char error_buffer[PCAP_ERRBUF_SIZE];
 	void *ptr;
@@ -192,11 +191,17 @@ int main(int argc, char const *argv[])
 			printf("psniff version %s\n", version);
 			exit(1);
 		}
-		if (strncmp(argv[i], "--filter", 8) == 0){
+		else if (strncmp(argv[i], "--filter", 8) == 0){
 			filt = 1;
 		}
-		if (strncmp(argv[i], "--udp", 5) == 0){
+		else if (strncmp(argv[i], "--udp", 5) == 0){
 			udp_run = 1;
+		}
+		else {
+			if (i != 0){
+				printf("\033[1;31mInvaild Argument:\033[00m %s\n", argv[i]);
+				exit(-1);
+			}
 		}
 	}
 
