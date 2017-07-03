@@ -1,0 +1,6 @@
+sudo apt-get install gcc
+sudo apt-get install libpcap-dev
+gcc psniff.c -o psniff -lpcap
+cp psniff.h /usr/bin
+cp psniff /usr/bin
+echo "done."
