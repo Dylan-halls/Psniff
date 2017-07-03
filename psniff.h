@@ -183,7 +183,7 @@ const char* getlocalip(){
 	char path[1035];
 
 	/* Open the command for reading. */
-	fp = popen("ifconfig |  grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1' | while read line; do echo -n \"$line \"; done", "r");
+	fp = popen("ip route get 1 | awk '{print $NF;exit}' | while read line; do echo -n \"$line \"; done", "r");
 	if (fp == NULL) {
 		printf("Failed to run command\n" );
 		exit(1);
