@@ -1,6 +1,10 @@
-sudo apt-get install gcc
-sudo apt-get install libpcap-dev
+echo -e "\033[1;30mInstalling gcc...\033[00m"
+sudo apt-get install gcc -y | grep 'NOthingn'
+echo -e "\033[1;30mInstalling pcap...\033[00m"
+sudo apt-get install libpcap-dev -y | grep 'NOthingn'
+echo -e "\033[1;30mCompiling...\033[00m"
 gcc psniff.c -o psniff -lpcap
-cp psniff.h /usr/bin
-cp psniff /usr/bin
-echo "done."
+echo -e "\033[1;30mMakeing executable...\033[00m"
+sudo cp psniff.h /usr/bin
+sudo cp psniff /usr/bin
+echo -e "\033[1;32mInstall Complete\033[00m"
