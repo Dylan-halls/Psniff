@@ -99,6 +99,7 @@ void assign_tcp(const u_char *packet){
 	printf("\033[1;30mseq=\033[00m\033[0;33m%u\033[00m ", (unsigned int)ntohl(tcp->th_seq));
 	printf("\033[1;30mack=\033[00m\033[0;33m%u\033[00m ", (unsigned int)ntohl(tcp->th_ack));
 	printf("\033[1;30mflag=\033[00m\033[0;33m%s\033[00m\n", gettcpflags(tcp));
+	return;
 }
 
 void assign_udp(const u_char *packet){
