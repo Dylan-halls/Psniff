@@ -1,18 +1,18 @@
-#include <stdio.h>
 #include <pcap.h>
-#include <arpa/inet.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
 #include <time.h>
+#include <ctype.h>
+#include <stdio.h>
 #include <netdb.h>
+#include <string.h>
+#include <stdlib.h>
 #include <sys/time.h>
-#include <netinet/ip_icmp.h>
-#include <netinet/tcp.h>
+#include <arpa/inet.h>
 #include <netinet/in.h>
-#include <netinet/if_ether.h>
-#include <netinet/udp.h>
 #include <net/if_arp.h>
+#include <netinet/udp.h>
+#include <netinet/tcp.h>
+#include <netinet/ip_icmp.h>
+#include <netinet/if_ether.h>
 
 #include "psniff.h"
 
@@ -156,6 +156,7 @@ int main(int argc, char const *argv[])
 {	
 	char *device;
 	int filt;
+	int monitor;
 	pcap_t *handle;
 	char* bpf_filter = NULL;
 	size_t nbytes = 10;
@@ -197,6 +198,9 @@ int main(int argc, char const *argv[])
 		else if (strncmp(argv[i], "--udp", 5) == 0){
 			udp_run = 1;
 		}
+		else if (strncmp(argv[i], "--monitor", 9) == 0){
+			monitor = 1;
+		}
 		else {
 			if (i != 0){
 				printf("\033[1;31mInvaild Argument:\033[00m %s\n", argv[i]);
@@ -226,13 +230,27 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
+    /* Print the start banner */
     banner();
-    //\033[1;3m%s\033[00m
     printf("\033[1;3m%s\033[00m | ", device);
     getlocalip();
     printf("| \033[1;3m%s\033[00m\n\n", subnet_mask);
 
-	handle = pcap_open_live(device, snapshot_len, promiscuous, timeout, error_buffer);
+    if (monitor != 1){
+		handle = pcap_open_live(device, snapshot_len, promiscuous, timeout, error_buffer);
+	}
+	else {
+		handle = pcap_create(device, error_buffer);
+		if (pcap_can_set_rfmon(handle) == 1){
+			fatal("Can't set monitor mode");
+		}
+		pcap_set_rfmon(handle, 1);
+		pcap_set_promisc(handle, 1);
+		pcap_set_snaplen(handle, snapshot_len);
+		pcap_set_timeout(handle, timeout);
+		pcap_activate(handle);
+	}
+
 	if (filt == 1){
 		printf("Filter: \033[1;36m");
 		getline(&bpf_filter, &nbytes, stdin);
