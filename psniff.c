@@ -5,6 +5,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/time.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -236,6 +237,10 @@ int main(int argc, char const *argv[])
     printf("\033[1;3m%s\033[00m | ", device);
     getlocalip();
     printf("| \033[1;3m%s\033[00m\n\n", subnet_mask);
+
+    if (getuid() != 0){
+    	fatal("Must be run as root");
+    }
 
     if (monitor != 1){
 		handle = pcap_open_live(device, snapshot_len, promiscuous, timeout, error_buffer);
