@@ -158,6 +158,7 @@ int main(int argc, char const *argv[])
 {	
 	char *device;
 	int filt;
+	int i;
 	int monitor;
 	pcap_t *handle;
 	char* bpf_filter = NULL;
@@ -189,7 +190,7 @@ int main(int argc, char const *argv[])
 	}
 
 	/* handle cmd args */
-	for (int i = 0; i < argc; ++i){
+	for (i = 0; i < argc; ++i){
 		if (strncmp(argv[i], "-v", 2) == 0){
 			printf("psniff version %s\n", version);
 			exit(1);
